@@ -60,19 +60,23 @@ class Template extends React.Component {
     to: '/'
   }, {
     primaryText: 'Internships',
-    leftIcon: <FontIcon>dashboard</FontIcon>,
+    leftIcon: <FontIcon>location_city</FontIcon>,
     component: Link,
     to: '/interns'
   }, {
     primaryText: 'Co-Op Programs',
-    leftIcon: <FontIcon>error</FontIcon>,
+    leftIcon: <FontIcon>transfer_within_a_station</FontIcon>,
     component: Link,
     to: '/coops'
   }, {
     primaryText: 'New Grads',
-    leftIcon: <FontIcon>error</FontIcon>,
+    leftIcon: <FontIcon>school</FontIcon>,
     component: Link,
     to: '/grads'
+  }, {
+    divider: true
+  }, {
+    Subheader: 'Preferences'
   }, {
     divider: true
   }]

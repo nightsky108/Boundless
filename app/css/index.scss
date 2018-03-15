@@ -27,9 +27,11 @@ a {
 
 //  Page layouts
 article {
-  margin: 16px 4px;
   max-width: 960px;
+  margin: 16px 4px;
+  padding: 4px 0;
   @media screen and (min-width: 992px) {
     margin: 16px auto;
+    padding: 16px 0;
   }
 }

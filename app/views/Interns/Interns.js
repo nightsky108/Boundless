@@ -8,7 +8,21 @@ import { connect } from 'react-redux'
 import { Loading } from '../../components'
 
 import { Link } from 'react-router'
+import FontIcon from 'react-md/lib/FontIcons'
 import ReactTable from 'react-table'
+
+const example = {
+  company: 'T-Mobile',
+  industry: 'Telecom',
+  standing: ['Juniors'],
+  roles: ['DevOps', 'SWE', 'IT'],
+  sponsorship: false,
+  inclusive: undefined,
+  compensation: 3.5,
+  interview: 'Behavioral',
+  rounds: 1,
+  challenges: ['Technical Phone Screen']
+}
 
 @compose(
   connect(state => ({
@@ -21,51 +35,95 @@ import ReactTable from 'react-table'
 )
 class CVETable extends React.Component {
   static defaultProps = {
-    internships: PropTypes.array
+    internships: PropTypes.arrayOf({
+      company: PropTypes.string,
+      industry: PropTypes.string,
+      standing: PropTypes.array,
+      roles: PropTypes.array,
+      sponsorship: PropTypes.bool,
+      inclusive: PropTypes.bool,
+      compensation: PropTypes.number,
+      interview: PropTypes.string,
+      rounds: PropTypes.number,
+      challenges: PropTypes.array
+    })
   }
   static defaultProps = {
-    internships: []
+    internships: [example]
   }
   columns = [
     {
-      Header: 'Overview',
+      Header: 'Company',
       columns: [
         {
-          Header: 'CVE',
-          accessor: 'CVE',
+          Header: 'Name',
+          accessor: 'company',
           Cell: row => (
-            <Link to={`/cve/${row.value}`}>{row.value}</Link>
+            <a href={row.value}>{row.value}</a>
           )
         },
         {
-          Header: 'CWE',
-          accessor: 'CWE'
+          Header: 'Industry',
+          accessor: 'industry'
         }
       ]
     },
     {
-      Header: 'Severity',
+      Header: 'Pipeline',
       columns: [
         {
-          Header: 'Level',
-          accessor: 'severity'
+          Header: 'Standing',
+          accessor: 'standing',
+          Cell: row => (<span>{row.value.join(', ')}</span>)
         },
         {
-          Header: 'Score',
-          accessor: 'cvss3_score'
+          Header: 'Roles',
+          accessor: 'roles',
+          Cell: row => (<span>{row.value.join(', ')}</span>)
         }
       ]
     },
     {
-      Header: 'Description',
+      Header: 'Interviews',
       columns: [
         {
-          Header: 'Bugzilla',
-          accessor: 'bugzilla_description'
+          Header: 'Type',
+          accessor: 'interview'
         },
         {
-          Header: 'API Source',
-          accessor: 'resource_url'
+          Header: 'Rounds',
+          accessor: 'rounds'
+        },
+        {
+          Header: 'Challenges',
+          accessor: 'challenges',
+          Cell: row => (<span>{row.value.join(', ')}</span>)
+        }
+      ]
+    }, {
+      Header: 'Offers',
+      columns: [
+        {
+          Header: 'Sponsorship',
+          accessor: 'sponsorship',
+          Cell: row => (
+            typeof row.value === 'boolean'
+              ? <FontIcon style={{ textAlign: 'center' }}>{row.value ? 'check' : 'not_interested'}</FontIcon>
+              : <span>N/A</span>
+          )
+        },
+        {
+          Header: 'Inclusive',
+          accessor: 'inclusive',
+          Cell: row => (
+            typeof row.value === 'boolean'
+              ? <FontIcon>{row.value ? 'check' : 'not_interested'}</FontIcon>
+              : <span>N/A</span>
+          )
+        },
+        {
+          Header: 'Compensation',
+          accessor: 'compensation'
         }
       ]
     }
@@ -76,8 +134,8 @@ class CVETable extends React.Component {
   ) {
     return (
       <article>
-        <Helmet title='Home' />
-        <Loading render={internships.length > 0} title='CVE Table' tip='Loading CVE...'>
+        <Helmet title='Internships' />
+        <Loading render={1 > 0} title='Internship Table' tip='Loading Internships...'>
           <section>
             <ReactTable
               data={internships}

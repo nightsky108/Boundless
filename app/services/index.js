@@ -10,3 +10,8 @@ import api from './api'
 export default api
 //  ENVIRONMENT VARIABLES
 export { default as environment } from './environment'
+//  INITIAL CONFIG (enums, etc)
+export { default as config } from './config'
+//  MICROSERVICES
+export { default as authentication } from './authentication'
+export { default as filter } from './filter'

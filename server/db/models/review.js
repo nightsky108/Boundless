@@ -38,7 +38,7 @@ NOTE:
 /* *****
 FAKE DATA GENERATOR: Review
 ******/
-const dummyReviews = (min, ids) => {
+export const dummyReviews = (min, ids) => {
   //  Check the db for existing data satisfying min required
   Review.count().exec((err, count) => {
     if (err) {
@@ -67,4 +67,3 @@ const dummyReviews = (min, ids) => {
     }
   })
 }
-export { dummyReviews }

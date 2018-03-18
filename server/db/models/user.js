@@ -41,7 +41,7 @@ export default User
 /* *****
 FAKE DATA GENERATOR: User
 ******/
-const dummyUsers = (min, ids, developer) => {
+export const dummyUsers = (min, ids, developer) => {
   //  Check the db for existing data satisfying min required
   User.count().exec((err, count) => {
     if (err) {
@@ -75,4 +75,3 @@ const dummyUsers = (min, ids, developer) => {
     }
   })
 }
-export { dummyUsers }

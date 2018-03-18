@@ -30,7 +30,7 @@ export default function () {
     _id,
     name: 'Web Developer',
     username: 'webdev',
-    email: 'rykeller@uw.edu'
+    email: 'rykeller@uw.edu',
     organization: ids.organization[0],
     reviews: ids.review[0],
     experience: ids.program[0]

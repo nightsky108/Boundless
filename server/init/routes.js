@@ -1,6 +1,5 @@
-import { controllers } from '../db'
-// import config from 'config'
-// const version = config.get('version')
+import db from '../db'
+const controllers = db.controllers
 
 //  GENERATE ROUTES
 export default (app) => {

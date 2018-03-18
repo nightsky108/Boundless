@@ -21,7 +21,7 @@ export default Organization
 /* *****
 FAKE DATA GENERATOR: User
 ******/
-const dummyOrganization = (min, ids, developer) => {
+export const dummyOrganizations = (min, ids, developer) => {
   //  Check the db for existing data satisfying min required
   Organization.count().exec((err, count) => {
     if (err) {
@@ -52,4 +52,3 @@ const dummyOrganization = (min, ids, developer) => {
     }
   })
 }
-export { dummyOrganization }

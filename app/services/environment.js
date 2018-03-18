@@ -7,9 +7,11 @@ This is actually a good thing, thus config can't be hijacked for
 API keys and security files.
 */
 const ENV = process.env.NODE_ENV
+const API = (process.env.NODE_ENV === 'development'
+  ? 'http://localhost:3000'
+  : 'https://boundless.org'
+)
 const version = process.env.VERSION || 'v2'
-const API = ENV === 'production'
-  ? 'https://www.boundless.org/'
-  : 'http://localhost:3000'
+
 export { ENV, API, version }
-export default { ENV, API }
+export default { ENV, API, version }

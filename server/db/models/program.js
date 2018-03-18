@@ -21,7 +21,7 @@ const ProgramSchema = new mongoose.Schema({
   sponsorship: Boolean,
   inclusive: Boolean,
   compensation: { type: Number, min: 0, max: 5 },
-  interviews: [String]
+  interviews: [String],
   reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]
 })
 ProgramSchema.plugin(autoref, [
@@ -35,7 +35,7 @@ export default Program
 /* *****
 FAKE DATA GENERATOR: Contact
 ***** */
-const dummyPrograms = (min, ids) => {
+export const dummyPrograms = (min, ids) => {
   //  Check the db for existing data satisfying min required
   Program.count().exec((err, count) => {
     if (err) {
@@ -78,5 +78,3 @@ const dummyPrograms = (min, ids) => {
     }
   })
 }
-
-export { dummyPrograms }

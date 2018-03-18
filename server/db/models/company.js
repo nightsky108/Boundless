@@ -29,7 +29,7 @@ export default Company
 /* *****
 FAKE DATA GENERATOR: Company
 ******/
-const dummyCompanys = (min, ids) => {
+export const dummyCompanies = (min, ids) => {
   //  Check the db for existing data satisfying min required
   Company.count().exec((err, count) => {
     if (err) {
@@ -54,5 +54,3 @@ const dummyCompanys = (min, ids) => {
     }
   })
 }
-
-export { dummyCompanys }

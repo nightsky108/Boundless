@@ -1,6 +1,8 @@
 import express from 'express'
 import webpack from 'webpack'
 import config from 'config'
+import db from './db'
+import initPassport from './init/passport'
 import initExpress from './init/express'
 import initRoutes from './init/routes'
 import renderMiddleware from './render/middleware'
@@ -8,6 +10,13 @@ const env = config.get('env')
 const port = config.get('port')
 
 const app = express()
+
+/*
+ * Database-specific setup
+ * - connect to MongoDB using mongoose
+ * - register mongoose Schema
+ */
+db.connect()
 
 if (env === 'development') {
   // enable webpack hot module replacement
@@ -25,6 +34,8 @@ if (env === 'development') {
 initExpress(app)
 //  Initialize API routes
 initRoutes(app)
+//  Initialize authZ systems and associated routes
+initPassport(app)
 
 /*
  * This is where the magic happens. We take the locals data we have already

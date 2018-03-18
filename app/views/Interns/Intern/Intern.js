@@ -7,9 +7,6 @@ import { connectRequest } from 'redux-query'
 import api from '../../../services'
 import { Loading } from '../../../components'
 
-import { Link } from 'react-router'
-import ReactTable from 'react-table'
-
 @compose(
   connect(state => ({
     intern: state.db.intern,
@@ -21,7 +18,7 @@ import ReactTable from 'react-table'
     update: { intern: (prev, next) => next }
   }))
 )
-class Internship extends React.Component {
+class Intern extends React.Component {
   static defaultProps = {
     intern: PropTypes.object
   }
@@ -29,7 +26,6 @@ class Internship extends React.Component {
     intern: {}
   }
   render (
-    { columns } = this,
     { params, intern } = this.props
   ) {
     return (
@@ -45,4 +41,4 @@ class Internship extends React.Component {
   }
 }
 
-export default Internship
+export default Intern

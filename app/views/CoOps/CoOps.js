@@ -7,9 +7,6 @@ import { connectRequest } from 'redux-query'
 import api from '../../services'
 import { Loading } from '../../components'
 
-import { Link } from 'react-router'
-import ReactTable from 'react-table'
-
 @compose(
   connect(state => ({
     coops: state.db.coops,
@@ -28,52 +25,7 @@ class CoOps extends React.Component {
   static defaultProps = {
     coops: []
   }
-  columns = [
-    {
-      Header: 'Overview',
-      columns: [
-        {
-          Header: 'CVE',
-          accessor: 'CVE',
-          Cell: row => (
-            <Link to={`/cve/${row.value}`}>{row.value}</Link>
-          )
-        },
-        {
-          Header: 'CWE',
-          accessor: 'CWE'
-        }
-      ]
-    },
-    {
-      Header: 'Severity',
-      columns: [
-        {
-          Header: 'Level',
-          accessor: 'severity'
-        },
-        {
-          Header: 'Score',
-          accessor: 'cvss3_score'
-        }
-      ]
-    },
-    {
-      Header: 'Description',
-      columns: [
-        {
-          Header: 'Bugzilla',
-          accessor: 'bugzilla_description'
-        },
-        {
-          Header: 'API Source',
-          accessor: 'resource_url'
-        }
-      ]
-    }
-  ]
   render (
-    { columns } = this,
     { params, coops } = this.props
   ) {
     return (
@@ -81,12 +33,7 @@ class CoOps extends React.Component {
         <Helmet title='CoOp Programs' />
         <Loading render={coops.length > 0} title='CoOp Programs' tip='Loading CoOp Programs...'>
           <section>
-            <ReactTable
-              data={coops}
-              columns={columns}
-              defaultPageSize={20}
-              className='-striped -highlight'
-            />
+            {JSON.stringify(coops)}
           </section>
         </Loading>
       </article>

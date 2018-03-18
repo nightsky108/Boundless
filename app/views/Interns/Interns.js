@@ -11,21 +11,12 @@ import { Link } from 'react-router'
 import FontIcon from 'react-md/lib/FontIcons'
 import ReactTable from 'react-table'
 
-const StatusIndicatorCell = (value) =>
-  value === 'boolean'
+const StatusIndicatorCell = (row) =>
+  typeof row.value === 'boolean'
     ? <FontIcon style={{ textAlign: 'center' }}>{row.value ? 'check' : 'not_interested'}</FontIcon>
-    : <span>N/A</span>
+    : null
 
-const example = {
-  company: 'T-Mobile',
-  industry: 'Telecom',
-  candidates: ['Juniors'],
-  roles: ['DevOps', 'SWE', 'IT'],
-  sponsorship: false,
-  inclusive: undefined,
-  compensation: 3.5,
-  interviews: ['Technical Phone Screen', 'Behavioral']
-}
+const ArrayCell = (row) => <span>{Array.isArray(row.value) ? row.value.join(', ') : JSON.stringify(row.value)}</span>
 
 @compose(
   connect(state => ({
@@ -34,6 +25,7 @@ const example = {
   })),
   connectRequest(()=> api.get('programs', {
     query: { type: 'Intern' },
+    populate: ['company'],
     transform: res => ({ interns: res }),
     update: { interns: (prev, next) => next }
   }))
@@ -62,14 +54,12 @@ class Interns extends React.Component {
       columns: [
         {
           Header: 'Name',
-          accessor: 'company',
-          Cell: row => (
-            <a href={row.value}>{row.value}</a>
-          )
+          accessor: 'company.name',
+          Cell: row => <a href={`/interns/${row.original._id}`}>{row.value}</a>
         },
         {
           Header: 'Industry',
-          accessor: 'industry'
+          accessor: 'company.industry'
         }
       ]
     },
@@ -79,21 +69,32 @@ class Interns extends React.Component {
         {
           Header: 'Eligible',
           accessor: 'eligible',
-          Cell: row => (<span>{row.value.join(', ')}</span>)
+          Cell: ArrayCell
         },
         {
           Header: 'Roles',
           accessor: 'roles',
-          Cell: row => (<span>{row.value.join(', ')}</span>)
+          Cell: ArrayCell
+        },
+        {
+          Header: 'Locations',
+          accessor: 'locations',
+          Cell: ArrayCell
         }
       ]
     },
     {
-      Header: 'Interviews',
+      Header: 'Hiring Process',
       columns: [
         {
-          Header: 'Type',
-          accessor: 'interview'
+          Header: 'Interviews',
+          accessor: 'interviews',
+          Cell: ArrayCell
+        },
+        {
+          Header: 'Challenges',
+          accessor: 'challenges',
+          Cell: ArrayCell
         }
       ]
     }, {
@@ -102,17 +103,17 @@ class Interns extends React.Component {
         {
           Header: 'Relocation',
           accessor: 'relocation',
-          Cell: row => <StatusIndicatorCell value={row.value} />
+          Cell: StatusIndicatorCell
         },
         {
           Header: 'Sponsorship',
           accessor: 'sponsorship',
-          Cell: row => <StatusIndicatorCell value={row.value} />
+          Cell: StatusIndicatorCell
         },
         {
           Header: 'Inclusive',
           accessor: 'inclusive',
-          Cell: row => <StatusIndicatorCell value={row.value} />
+          Cell: StatusIndicatorCell
         },
         {
           Header: 'Compensation',
@@ -128,16 +129,21 @@ class Interns extends React.Component {
     return (
       <article>
         <Helmet title='Internships' />
-        <Loading render={1 > 0} title='Internship Programs' tip='Loading Internships...'>
+        <Loading render={interns.length > 0} title='Internship Programs' tip='Loading Internships...'>
           <section>
-            {JSON.stringify(interns)}
+            <ReactTable
+              data={interns}
+              columns={columns}
+              defaultPageSize={20}
+              className='-striped -highlight'
+            />
           </section>
         </Loading>
       </article>
     )
   }
 }
-
+// {JSON.stringify(interns)}
 // <ReactTable
 //   data={interns}
 //   columns={columns}

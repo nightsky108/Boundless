@@ -7,9 +7,6 @@ import { connectRequest } from 'redux-query'
 import api from '../../../services'
 import { Loading } from '../../../components'
 
-import { Link } from 'react-router'
-import ReactTable from 'react-table'
-
 @compose(
   connect(state => ({
     grad: state.db.grad,

@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import autoref from 'mongoose-autorefs'
-import autopopulate from 'mongoose-autopopulate'
 import faker from 'faker'
 
 /*
@@ -25,7 +24,6 @@ ReviewSchema.plugin(autoref, [
   'program.reviews',
   'author.reviews'
 ])
-ReviewSchema.plugin(autopopulate)
 const Review = mongoose.model('Review', ReviewSchema)
 export default Review
 /*
@@ -56,14 +54,15 @@ export const dummyReviews = (min, ids) => {
           author: ids.user[i],
           title: faker.company.catchPhraseDescriptor(),
           body: faker.lorem.paragraph(),
-          score: faker.random.number(),
+          score: (i % 2 === 0) ? 0 : 5,
           recommended: faker.random.boolean()
         })
       }
       //  Create will push our fakes into the DB.
-      Review.create(fakes, (error) => {
-        if (!error) { console.log(`SEED: Created fake Review (${fakes.length})`) }
-      })
+      Review.create(fakes, (error) => error
+        ? console.error(`SEED: Creating Review failed - ${error}`)
+        : console.log(`SEED: Created fake Review (${fakes.length})`)
+      )
     }
   })
 }

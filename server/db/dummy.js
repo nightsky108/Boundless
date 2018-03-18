@@ -24,17 +24,25 @@ export default function () {
       ids[key].push(new mongoose.Types.ObjectId())
     }
   })
-  let _id = new mongoose.Types.ObjectId()
+  let developer_id = new mongoose.Types.ObjectId()
+  let organization_id = new mongoose.Types.ObjectId()
   //  For testing purposes
   const developer = {
-    _id,
+    _id: developer_id,
+    organization: organization_id,
     name: 'Web Developer',
     username: 'webdev',
     email: 'rykeller@uw.edu',
-    organization: ids.organization[0],
-    reviews: ids.review[0],
-    experience: ids.program[0]
+    reviews: [ids.review[0]],
+    experience: [ids.program[0]]
+  }
+  const school = {
+    _id: organization_id,
+    name: 'University of Washington',
+    location: 'Seattle, WA',
+    domains: ['uw.edu', 'u.washington.edu', 'washington.edu'],
+    targets: []
   }
   //  Create dummies for all RESTful models
-  restDummies.map((model) => model(min, ids, developer))
+  restDummies.map((model) => model(min, ids, developer, school))
 }

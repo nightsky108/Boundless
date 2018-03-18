@@ -21,7 +21,7 @@ export default Organization
 /* *****
 FAKE DATA GENERATOR: User
 ******/
-export const dummyOrganizations = (min, ids, developer) => {
+export const dummyOrganizations = (min, ids, developer, school) => {
   //  Check the db for existing data satisfying min required
   Organization.count().exec((err, count) => {
     if (err) {
@@ -35,16 +35,17 @@ export const dummyOrganizations = (min, ids, developer) => {
           name: faker.company.companyName(),
           location: faker.address.city(),
           domains: [faker.internet.domainName()],
-          targets: [ids.company[i]]
+          targets: [
+            ids.company[i],
+            ids.company[i]
+          ]
         })
       }
-      fakes.push(new Organization({
-        _id: developer.organization,
-        user: developer._id,
-        spectator: true,
-        member: true,
-        admin: true
-      }))
+      let developerOrg = Object.assign({},
+        school,
+        { targets: [ids.company[0]] }
+      )
+      fakes.push(new Organization(developerOrg))
       //  Create will push our fakes into the DB.
       Organization.create(fakes, (error) => {
         if (!error) { console.log(`SEED: Created fake Organization authZ (${fakes.length})`) }

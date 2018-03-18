@@ -15,25 +15,29 @@ import ReactTable from 'react-table'
     grad: state.db.grad,
     filters: state.filters
   })),
-  connectRequest(() => api.get('programs'))
+  connectRequest((props) => api.get('program', {
+    id: props.params.id,
+    transform: res => ({ grad: res }),
+    update: { grad: (prev, next) => next }
+  }))
 )
 class Grad extends React.Component {
   static defaultProps = {
-    internship: PropTypes.object
+    grad: PropTypes.object
   }
   static defaultProps = {
-    internship: {}
+    grad: {}
   }
   render (
     { columns } = this,
-    { params, internship } = this.props
+    { params, grad } = this.props
   ) {
     return (
       <article>
         <Helmet title='New Grad' />
-        <Loading render={Object.keys(internship) > 0} title='New Grad Program' tip='Loading New Grad Program...'>
+        <Loading render={Object.keys(grad) > 0} title='New Grad Program' tip='Loading New Grad Program...'>
           <section>
-            {JSON.stringify(internship)}
+            {JSON.stringify(grad)}
           </section>
         </Loading>
       </article>
@@ -41,4 +45,4 @@ class Grad extends React.Component {
   }
 }
 
-export default Internship
+export default Grad

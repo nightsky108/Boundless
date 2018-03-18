@@ -15,11 +15,15 @@ import ReactTable from 'react-table'
     coop: state.db.coop,
     filters: state.filters
   })),
-  connectRequest(() => api.get('programs'))
+  connectRequest((props) => api.get('program', {
+    id: props.params.id,
+    transform: res => ({ coop: res }),
+    update: { coop: (prev, next) => next }
+  }))
 )
 class CoOp extends React.Component {
   static defaultProps = {
-    internship: PropTypes.object
+    coop: PropTypes.object
   }
   static defaultProps = {
     coop: {}

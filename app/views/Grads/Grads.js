@@ -15,7 +15,11 @@ import ReactTable from 'react-table'
     grads: state.db.grads,
     filters: state.filters
   })),
-  connectRequest(() => api.get('programs'))
+  connectRequest(()=> api.get('programs', {
+    query: { type: 'New Grad' },
+    transform: res => ({ grads: res }),
+    update: { grads: (prev, next) => next }
+  }))
 )
 class Grads extends React.Component {
   static defaultProps = {

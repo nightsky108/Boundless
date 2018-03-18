@@ -29,16 +29,18 @@ const example = {
 
 @compose(
   connect(state => ({
-    internships: state.db.internships,
+    interns: state.db.interns,
     filters: state.filters
   })),
   connectRequest(()=> api.get('programs', {
-    query: { type: 'Intern' }
+    query: { type: 'Intern' },
+    transform: res => ({ interns: res }),
+    update: { interns: (prev, next) => next }
   }))
 )
 class Interns extends React.Component {
   static defaultProps = {
-    internships: PropTypes.arrayOf({
+    interns: PropTypes.arrayOf({
       company: PropTypes.string,
       industry: PropTypes.string,
       eligible: PropTypes.array,
@@ -52,7 +54,7 @@ class Interns extends React.Component {
     })
   }
   static defaultProps = {
-    internships: []
+    interns: []
   }
   columns = [
     {
@@ -121,14 +123,14 @@ class Interns extends React.Component {
   ]
   render (
     { columns } = this,
-    { params, internships } = this.props
+    { params, interns } = this.props
   ) {
     return (
       <article>
         <Helmet title='Internships' />
         <Loading render={1 > 0} title='Internship Programs' tip='Loading Internships...'>
           <section>
-            {JSON.stringify(internships)}
+            {JSON.stringify(interns)}
           </section>
         </Loading>
       </article>
@@ -137,7 +139,7 @@ class Interns extends React.Component {
 }
 
 // <ReactTable
-//   data={internships}
+//   data={interns}
 //   columns={columns}
 //   defaultPageSize={20}
 //   className='-striped -highlight'

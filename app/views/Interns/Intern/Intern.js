@@ -12,28 +12,32 @@ import ReactTable from 'react-table'
 
 @compose(
   connect(state => ({
-    internships: state.db.internships,
+    intern: state.db.intern,
     filters: state.filters
   })),
-  connectRequest(() => api.get('programs'))
+  connectRequest((props) => api.get('program', {
+    id: props.params.id,
+    transform: res => ({ intern: res }),
+    update: { intern: (prev, next) => next }
+  }))
 )
 class Internship extends React.Component {
   static defaultProps = {
-    internship: PropTypes.object
+    intern: PropTypes.object
   }
   static defaultProps = {
-    internship: {}
+    intern: {}
   }
   render (
     { columns } = this,
-    { params, internship } = this.props
+    { params, intern } = this.props
   ) {
     return (
       <article>
         <Helmet title='Internship' />
-        <Loading render={Object.keys(internship) > 0} title='Internship Program' tip='Loading Internship Details...'>
+        <Loading render={Object.keys(intern) > 0} title='Internship Program' tip='Loading Internship Details...'>
           <section>
-            {JSON.stringify(internship)}
+            {JSON.stringify(intern)}
           </section>
         </Loading>
       </article>

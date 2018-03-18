@@ -15,7 +15,11 @@ import ReactTable from 'react-table'
     coops: state.db.coops,
     filters: state.filters
   })),
-  connectRequest(() => api.get('programs'))
+  connectRequest(()=> api.get('programs', {
+    query: { type: 'CoOp' },
+    transform: res => ({ coops: res }),
+    update: { coops: (prev, next) => next }
+  }))
 )
 class CoOps extends React.Component {
   static defaultProps = {

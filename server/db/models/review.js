@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import autoref from 'mongoose-autorefs'
 import faker from 'faker'
+import _ from 'lodash'
 
 /*
 REVIEW SCHEMA:
@@ -50,7 +51,7 @@ export const dummyReviews = (min, ids) => {
           date: faker.date.recent(),
           company: ids.company[i],
           program: ids.program[i],
-          role: (i % 2 === 0) ? 'SWE' : 'SDET',
+          role: _.sample(['SWE', 'SDET', 'Security', 'UI/UX']),
           author: ids.user[i],
           title: faker.company.catchPhraseDescriptor(),
           body: faker.lorem.paragraph(),

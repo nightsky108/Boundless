@@ -75,10 +75,6 @@ class Template extends React.Component {
     to: '/grads'
   }, {
     divider: true
-  }, {
-    Subheader: 'Preferences'
-  }, {
-    divider: true
   }]
   render (
     { navItems } = this,

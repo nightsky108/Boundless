@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-// import { connectRequest } from 'redux-query'
-// import api from '../../services'
+import { connectRequest } from 'redux-query'
+import api from '../../services'
 import { Loading } from '../../components'
 
 import { Link } from 'react-router'
@@ -12,19 +12,17 @@ import ReactTable from 'react-table'
 
 @compose(
   connect(state => ({
-    internships: state.db.internships,
+    grads: state.db.grads,
     filters: state.filters
-  }))
-  // connectRequest(()=> {
-  //
-  // })
+  })),
+  connectRequest(() => api.get('programs'))
 )
-class CVETable extends React.Component {
+class Grads extends React.Component {
   static defaultProps = {
-    internships: PropTypes.array
+    grads: PropTypes.array
   }
   static defaultProps = {
-    internships: []
+    grads: []
   }
   columns = [
     {
@@ -72,15 +70,15 @@ class CVETable extends React.Component {
   ]
   render (
     { columns } = this,
-    { params, internships } = this.props
+    { params, grads } = this.props
   ) {
     return (
       <article>
-        <Helmet title='Home' />
-        <Loading render={internships.length > 0} title='CVE Table' tip='Loading CVE...'>
+        <Helmet title='New Grads' />
+        <Loading render={grads.length > 0} title='New Grad Programs' tip='Loading New Grad Programs...'>
           <section>
             <ReactTable
-              data={internships}
+              data={grads}
               columns={columns}
               defaultPageSize={20}
               className='-striped -highlight'
@@ -92,4 +90,4 @@ class CVETable extends React.Component {
   }
 }
 
-export default CVETable
+export default Grads

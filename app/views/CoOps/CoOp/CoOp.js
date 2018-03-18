@@ -3,18 +3,19 @@ import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-// import { connectRequest } from 'redux-query'
-// import api from '../../../services'
+import { connectRequest } from 'redux-query'
+import api from '../../../services'
 import { Loading } from '../../../components'
+
+import { Link } from 'react-router'
+import ReactTable from 'react-table'
 
 @compose(
   connect(state => ({
     coop: state.db.coop,
     filters: state.filters
-  }))
-  // connectRequest(()=> {
-  //
-  // })
+  })),
+  connectRequest(() => api.get('programs'))
 )
 class CoOp extends React.Component {
   static defaultProps = {
@@ -29,8 +30,8 @@ class CoOp extends React.Component {
   ) {
     return (
       <article>
-        <Helmet title='Home' />
-        <Loading render={Object.keys(coop) > 0} title='CVE Table' tip='Loading CVE...'>
+        <Helmet title='CoOp' />
+        <Loading render={Object.keys(coop) > 0} title='CoOp Program' tip='Loading CoOp Program...'>
           <section>
             {JSON.stringify(coop)}
           </section>

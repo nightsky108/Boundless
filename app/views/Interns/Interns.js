@@ -3,53 +3,56 @@ import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-// import { connectRequest } from 'redux-query'
-// import api from '../../services'
+import { connectRequest } from 'redux-query'
+import api from '../../services'
 import { Loading } from '../../components'
 
 import { Link } from 'react-router'
 import FontIcon from 'react-md/lib/FontIcons'
 import ReactTable from 'react-table'
 
+const StatusIndicatorCell = (value) =>
+  value === 'boolean'
+    ? <FontIcon style={{ textAlign: 'center' }}>{row.value ? 'check' : 'not_interested'}</FontIcon>
+    : <span>N/A</span>
+
 const example = {
   company: 'T-Mobile',
   industry: 'Telecom',
-  standing: ['Juniors'],
+  candidates: ['Juniors'],
   roles: ['DevOps', 'SWE', 'IT'],
   sponsorship: false,
   inclusive: undefined,
   compensation: 3.5,
-  interview: 'Behavioral',
-  rounds: 1,
-  challenges: ['Technical Phone Screen']
+  interviews: ['Technical Phone Screen', 'Behavioral']
 }
 
 @compose(
   connect(state => ({
     internships: state.db.internships,
     filters: state.filters
+  })),
+  connectRequest(()=> api.get('programs', {
+    query: { type: 'Intern' }
   }))
-  // connectRequest(()=> {
-  //
-  // })
 )
-class CVETable extends React.Component {
+class Interns extends React.Component {
   static defaultProps = {
     internships: PropTypes.arrayOf({
       company: PropTypes.string,
       industry: PropTypes.string,
-      standing: PropTypes.array,
+      eligible: PropTypes.array,
       roles: PropTypes.array,
+      relocation: PropTypes.bool,
       sponsorship: PropTypes.bool,
       inclusive: PropTypes.bool,
       compensation: PropTypes.number,
-      interview: PropTypes.string,
-      rounds: PropTypes.number,
+      interviews: PropTypes.array,
       challenges: PropTypes.array
     })
   }
   static defaultProps = {
-    internships: [example]
+    internships: []
   }
   columns = [
     {
@@ -72,8 +75,8 @@ class CVETable extends React.Component {
       Header: 'Pipeline',
       columns: [
         {
-          Header: 'Standing',
-          accessor: 'standing',
+          Header: 'Eligible',
+          accessor: 'eligible',
           Cell: row => (<span>{row.value.join(', ')}</span>)
         },
         {
@@ -89,37 +92,25 @@ class CVETable extends React.Component {
         {
           Header: 'Type',
           accessor: 'interview'
-        },
-        {
-          Header: 'Rounds',
-          accessor: 'rounds'
-        },
-        {
-          Header: 'Challenges',
-          accessor: 'challenges',
-          Cell: row => (<span>{row.value.join(', ')}</span>)
         }
       ]
     }, {
       Header: 'Offers',
       columns: [
         {
+          Header: 'Relocation',
+          accessor: 'relocation',
+          Cell: row => <StatusIndicatorCell value={row.value} />
+        },
+        {
           Header: 'Sponsorship',
           accessor: 'sponsorship',
-          Cell: row => (
-            typeof row.value === 'boolean'
-              ? <FontIcon style={{ textAlign: 'center' }}>{row.value ? 'check' : 'not_interested'}</FontIcon>
-              : <span>N/A</span>
-          )
+          Cell: row => <StatusIndicatorCell value={row.value} />
         },
         {
           Header: 'Inclusive',
           accessor: 'inclusive',
-          Cell: row => (
-            typeof row.value === 'boolean'
-              ? <FontIcon>{row.value ? 'check' : 'not_interested'}</FontIcon>
-              : <span>N/A</span>
-          )
+          Cell: row => <StatusIndicatorCell value={row.value} />
         },
         {
           Header: 'Compensation',
@@ -135,14 +126,9 @@ class CVETable extends React.Component {
     return (
       <article>
         <Helmet title='Internships' />
-        <Loading render={1 > 0} title='Internship Table' tip='Loading Internships...'>
+        <Loading render={1 > 0} title='Internship Programs' tip='Loading Internships...'>
           <section>
-            <ReactTable
-              data={internships}
-              columns={columns}
-              defaultPageSize={20}
-              className='-striped -highlight'
-            />
+            {JSON.stringify(internships)}
           </section>
         </Loading>
       </article>
@@ -150,4 +136,11 @@ class CVETable extends React.Component {
   }
 }
 
-export default CVETable
+// <ReactTable
+//   data={internships}
+//   columns={columns}
+//   defaultPageSize={20}
+//   className='-striped -highlight'
+// />
+
+export default Interns

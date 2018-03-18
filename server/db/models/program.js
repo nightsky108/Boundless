@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import autoref from 'mongoose-autorefs'
 import autopopulate from 'mongoose-autopopulate'
 import faker from 'faker'
+import _ from 'lodash'
 
 /*
 MANIFEST SCHEMA:
@@ -14,14 +15,18 @@ Thus, when voting on A MANIFEST, you're not just voting on A PROPOSAL.
 const ProgramSchema = new mongoose.Schema({
   company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', autopopulate: true },
   type: { type: String, default: 'Intern' },
-  candidates: { type: [String], default: ['Junior'] },
+  eligible: { type: [String], default: ['Junior'] },
   roles: [String],
   locations: [String],
   relocation: Boolean,
   sponsorship: Boolean,
   inclusive: Boolean,
   compensation: { type: Number, min: 0, max: 5 },
+  // Type of interviews in sequence (['Behavioral', 'Technical On-Site'])
   interviews: [String],
+  // Example of "challenges"
+  //  http://they.whiteboarded.me/companies-that-whiteboard.html
+  challenges: [String],
   reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]
 })
 ProgramSchema.plugin(autoref, [
@@ -47,11 +52,14 @@ export const dummyPrograms = (min, ids) => {
         fakes[i] = new Program({
           _id: ids.program[i],
           company: ids.company[i],
-          type: (i % 2 === 0) ? 'Intern' : 'Grad',
-          candidates: [(i % 2 === 0) ? 'Junior' : 'Grad'],
+          type: _.sample(['Intern', 'CoOp', 'New Grad']),
+          eligible: [
+            _.sample(['Sophomores', 'Juniors', 'Seniors', 'New Grads']),
+            _.sample(['Sophomores', 'Juniors', 'Seniors', 'New Grads'])
+          ],
           roles: [
-            (i % 2 === 0) ? 'SWE' : 'SDET',
-            (i % 2 === 0) ? 'Security' : 'UI/UX'
+            _.sample(['SWE', 'SDET', 'Security', 'UI/UX']),
+            _.sample(['SWE', 'SDET', 'Security', 'UI/UX'])
           ],
           locations: [
             faker.address.city(),
@@ -60,10 +68,14 @@ export const dummyPrograms = (min, ids) => {
           relocation: (i % 2 === 0) ? faker.random.boolean() : undefined,
           sponsorship: (i % 2 === 0) ? faker.random.boolean() : undefined,
           inclusive: (i % 2 === 0) ? faker.random.boolean() : undefined,
-          compensation: faker.random.number(),
+          compensation: (i % 2 === 0) ? 0 : 5,
           interviews: [
             faker.hacker.verb(),
             faker.hacker.verb()
+          ],
+          challenges: [
+            _.sample(['Online Challenge', 'Whiteboarding', 'Live Coding', 'Homework', 'Code Review']),
+            _.sample(['Online Challenge', 'Whiteboarding', 'Live Coding', 'Homework', 'Code Review'])
           ],
           reviews: [
             ids.review[i],
@@ -72,9 +84,10 @@ export const dummyPrograms = (min, ids) => {
         })
       }
       //  Create will push our fakes into the DB.
-      Program.create(fakes, (error) => {
-        if (!error) { console.log(`SEED: Created fake Program (${fakes.length})`) }
-      })
+      Program.create(fakes, (error) => error
+        ? console.error(`SEED: Creating Program failed - ${error}`)
+        : console.log(`SEED: Created fake Program (${fakes.length})`)
+      )
     }
   })
 }

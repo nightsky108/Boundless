@@ -5,15 +5,16 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { connectRequest } from 'redux-query'
 import api from '../services'
-import { Loading } from '../components'
+import { Loading, Programs } from '../components'
 
 @compose(
   connect(state => ({
     coops: state.db.coops,
     filters: state.filters
   })),
-  connectRequest(()=> api.get('programs', {
+  connectRequest(() => api.get('programs', {
     query: { type: 'CoOp' },
+    populate: ['company'],
     transform: res => ({ coops: res }),
     update: { coops: (prev, next) => next }
   }))
@@ -33,7 +34,7 @@ class CoOps extends React.Component {
         <Helmet title='CoOp Programs' />
         <Loading render={coops.length > 0} title='CoOp Programs' tip='Loading CoOp Programs...'>
           <section>
-            {JSON.stringify(coops)}
+            <Programs data={coops} />
           </section>
         </Loading>
       </article>

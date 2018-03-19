@@ -5,15 +5,16 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { connectRequest } from 'redux-query'
 import api from '../services'
-import { Loading } from '../components'
+import { Loading, Programs } from '../components'
 
 @compose(
   connect(state => ({
     grads: state.db.grads,
     filters: state.filters
   })),
-  connectRequest(()=> api.get('programs', {
+  connectRequest(() => api.get('programs', {
     query: { type: 'New Grad' },
+    populate: ['company'],
     transform: res => ({ grads: res }),
     update: { grads: (prev, next) => next }
   }))
@@ -33,7 +34,7 @@ class Grads extends React.Component {
         <Helmet title='New Grads' />
         <Loading render={grads.length > 0} title='New Grad Programs' tip='Loading New Grad Programs...'>
           <section>
-            {JSON.stringify(grads)}
+            <Programs data={grads} />
           </section>
         </Loading>
       </article>

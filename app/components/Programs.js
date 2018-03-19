@@ -1,7 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Helmet from 'react-helmet'
-import { Loading } from './'
 
 // import { Link } from 'react-router'
 import FontIcon from 'react-md/lib/FontIcons'
@@ -16,7 +14,7 @@ const ArrayCell = (row) => <span>{Array.isArray(row.value) ? row.value.join(', '
 
 class Programs extends React.Component {
   static defaultProps = {
-    programs: PropTypes.arrayOf({
+    data: PropTypes.arrayOf({
       company: PropTypes.string,
       industry: PropTypes.string,
       eligible: PropTypes.array,
@@ -30,7 +28,7 @@ class Programs extends React.Component {
     })
   }
   static defaultProps = {
-    programs: []
+    data: []
   }
   columns = [
     {
@@ -107,23 +105,15 @@ class Programs extends React.Component {
     }
   ]
   render (
-    { columns } = this,
-    { programs } = this.props
+    { columns } = this
   ) {
     return (
-      <article>
-        <Helmet title='Internships' />
-        <Loading render={programs.length > 0} title='Internship Programs' tip='Loading Internships...'>
-          <section>
-            <ReactTable
-              data={programs}
-              columns={columns}
-              defaultPageSize={20}
-              className='-striped -highlight'
-            />
-          </section>
-        </Loading>
-      </article>
+      <ReactTable
+        {...this.props}
+        columns={columns}
+        defaultPageSize={20}
+        className='-striped -highlight'
+      />
     )
   }
 }

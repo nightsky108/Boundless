@@ -5,35 +5,44 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { connectRequest } from 'redux-query'
 import api from '../services'
-import { Loading } from '../components'
+import { Loading, Program } from '../components'
 
 @compose(
   connect(state => ({
-    intern: state.db.intern,
+    program: state.db.program,
     filters: state.filters
   })),
-  connectRequest((props) => api.get('program', {
-    id: props.params.id,
-    transform: res => ({ intern: res }),
-    update: { intern: (prev, next) => next }
-  }))
+  connectRequest((props) =>
+    api.get('program', { id: props.params.id })
+  )
 )
-class Intern extends React.Component {
+class ProgramPage extends React.Component {
   static defaultProps = {
-    intern: PropTypes.object
+    program: PropTypes.shape({
+      company: PropTypes.string,
+      industry: PropTypes.string,
+      eligible: PropTypes.array,
+      roles: PropTypes.array,
+      relocation: PropTypes.bool,
+      sponsorship: PropTypes.bool,
+      inclusive: PropTypes.bool,
+      compensation: PropTypes.number,
+      interviews: PropTypes.array,
+      challenges: PropTypes.array
+    })
   }
   static defaultProps = {
-    intern: {}
+    program: {}
   }
   render (
-    { params, intern } = this.props
+    { params, program } = this.props
   ) {
     return (
       <article>
-        <Helmet title='Internship' />
-        <Loading render={Object.keys(intern) > 0} title='Internship Program' tip='Loading Internship Details...'>
+        <Helmet title='Program' />
+        <Loading render={program._id} title='Program' tip='Loading Program...'>
           <section>
-            {JSON.stringify(intern)}
+            <Program {...program} />
           </section>
         </Loading>
       </article>
@@ -41,4 +50,4 @@ class Intern extends React.Component {
   }
 }
 
-export default Intern
+export default ProgramPage

@@ -4,8 +4,8 @@ import Helmet from 'react-helmet'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { connectRequest } from 'redux-query'
-import api from '../../services'
-import { Loading } from '../../components'
+import api from '../services'
+import { Loading } from '../components'
 
 @compose(
   connect(state => ({

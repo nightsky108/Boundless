@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 
 import Helmet from 'react-helmet'
-import favicon from '../../images/favicon.ico'
+import favicon from '../images/favicon.ico'
 const meta = [
   { charset: 'utf-8' },
   // Meta descriptions are commonly used on search engine result pages to
@@ -42,7 +42,7 @@ import FontIcon from 'react-md/lib/FontIcons'
     screen: state.screen
   })
 )
-class Template extends React.Component {
+class UI extends React.Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
     router: PropTypes.object,
@@ -84,7 +84,7 @@ class Template extends React.Component {
     return (
       <div>
         <Helmet
-          titleTemplate='%s - Boundless'
+          titleUI='%s - Boundless'
           meta={meta} link={link}
         />
         <NavigationDrawer
@@ -105,4 +105,4 @@ class Template extends React.Component {
   }
 }
 
-export default Template
+export default UI

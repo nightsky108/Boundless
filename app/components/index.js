@@ -1,2 +1,4 @@
-export { default as Loading } from './Loading/Loading'
-export { default as Boundary } from './Boundary/Boundary'
+export { default as Loading } from './Loading'
+export { default as Boundary } from './Boundary'
+export { default as Programs } from './Programs'
+export { default as Program } from './Program'

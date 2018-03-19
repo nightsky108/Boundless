@@ -1,13 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { connectRequest } from 'redux-query'
-import api from '../../services'
-import { Loading } from '../../components'
+import { Loading } from './'
 
-import { Link } from 'react-router'
+// import { Link } from 'react-router'
 import FontIcon from 'react-md/lib/FontIcons'
 import ReactTable from 'react-table'
 
@@ -18,21 +14,9 @@ const StatusIndicatorCell = (row) =>
 
 const ArrayCell = (row) => <span>{Array.isArray(row.value) ? row.value.join(', ') : JSON.stringify(row.value)}</span>
 
-@compose(
-  connect(state => ({
-    interns: state.db.interns,
-    filters: state.filters
-  })),
-  connectRequest(()=> api.get('programs', {
-    query: { type: 'Intern' },
-    populate: ['company'],
-    transform: res => ({ interns: res }),
-    update: { interns: (prev, next) => next }
-  }))
-)
-class Interns extends React.Component {
+class Programs extends React.Component {
   static defaultProps = {
-    interns: PropTypes.arrayOf({
+    programs: PropTypes.arrayOf({
       company: PropTypes.string,
       industry: PropTypes.string,
       eligible: PropTypes.array,
@@ -46,7 +30,7 @@ class Interns extends React.Component {
     })
   }
   static defaultProps = {
-    interns: []
+    programs: []
   }
   columns = [
     {
@@ -124,15 +108,15 @@ class Interns extends React.Component {
   ]
   render (
     { columns } = this,
-    { params, interns } = this.props
+    { programs } = this.props
   ) {
     return (
       <article>
         <Helmet title='Internships' />
-        <Loading render={interns.length > 0} title='Internship Programs' tip='Loading Internships...'>
+        <Loading render={programs.length > 0} title='Internship Programs' tip='Loading Internships...'>
           <section>
             <ReactTable
-              data={interns}
+              data={programs}
               columns={columns}
               defaultPageSize={20}
               className='-striped -highlight'
@@ -143,12 +127,4 @@ class Interns extends React.Component {
     )
   }
 }
-// {JSON.stringify(interns)}
-// <ReactTable
-//   data={interns}
-//   columns={columns}
-//   defaultPageSize={20}
-//   className='-striped -highlight'
-// />
-
-export default Interns
+export default Programs

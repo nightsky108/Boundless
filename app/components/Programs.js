@@ -1,16 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-// import { Link } from 'react-router'
-import FontIcon from 'react-md/lib/FontIcons'
-import ReactTable from 'react-table'
+import { Link } from 'react-router'
+import {
+  DataTable,
+  TableHeader,
+  TableCardHeader,
+  TableBody,
+  TableRow,
+  TableColumn
+} from 'react-md'
 
-const StatusIndicatorCell = (row) =>
-  typeof row.value === 'boolean'
-    ? <FontIcon style={{ textAlign: 'center' }}>{row.value ? 'check' : 'not_interested'}</FontIcon>
-    : null
-
-const ArrayCell = (row) => <span>{Array.isArray(row.value) ? row.value.join(', ') : JSON.stringify(row.value)}</span>
+const arrayString = (arr) => Array.isArray(arr)
+  ? arr.join(', ')
+  : JSON.stringify(arr)
 
 class Programs extends React.Component {
   static defaultProps = {
@@ -31,89 +34,61 @@ class Programs extends React.Component {
     data: []
   }
   columns = [
-    {
-      Header: 'Company',
-      columns: [
-        {
-          Header: 'Name',
-          accessor: 'company.name',
-          Cell: row => <a href={`/interns/${row.original._id}`}>{row.value}</a>
-        },
-        {
-          Header: 'Industry',
-          accessor: 'company.industry'
-        }
-      ]
-    },
-    {
-      Header: 'Pipeline',
-      columns: [
-        {
-          Header: 'Eligible',
-          accessor: 'eligible',
-          Cell: ArrayCell
-        },
-        {
-          Header: 'Roles',
-          accessor: 'roles',
-          Cell: ArrayCell
-        },
-        {
-          Header: 'Locations',
-          accessor: 'locations',
-          Cell: ArrayCell
-        }
-      ]
-    },
-    {
-      Header: 'Hiring Process',
-      columns: [
-        {
-          Header: 'Interviews',
-          accessor: 'interviews',
-          Cell: ArrayCell
-        },
-        {
-          Header: 'Challenges',
-          accessor: 'challenges',
-          Cell: ArrayCell
-        }
-      ]
-    }, {
-      Header: 'Offers',
-      columns: [
-        {
-          Header: 'Relocation',
-          accessor: 'relocation',
-          Cell: StatusIndicatorCell
-        },
-        {
-          Header: 'Sponsorship',
-          accessor: 'sponsorship',
-          Cell: StatusIndicatorCell
-        },
-        {
-          Header: 'Inclusive',
-          accessor: 'inclusive',
-          Cell: StatusIndicatorCell
-        },
-        {
-          Header: 'Compensation',
-          accessor: 'compensation'
-        }
-      ]
-    }
+    'Company / Program',
+    'Size',
+    'Industry',
+    'Roles',
+    'Eligibility',
+    'Interviews',
+    'Offers'
   ]
   render (
-    { columns } = this
+    { columns } = this,
+    { data } = this.props
   ) {
+    console.log(data)
     return (
-      <ReactTable
-        {...this.props}
-        columns={columns}
-        defaultPageSize={20}
-        className='-striped -highlight'
-      />
+      <DataTable baseId='simple-selectable-table' indeterminate>
+        <TableHeader>
+          <TableRow>
+            {columns.map(col => (
+              <TableColumn key={col} grow>{col}</TableColumn>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.map((program, i) => (
+            <TableRow key={i}>
+              <TableColumn>
+                {program.company.name}
+                {program.name ? ` - ${program.name}` : ''}
+              </TableColumn>
+              <TableColumn>
+                {'(size)'}
+              </TableColumn>
+              <TableColumn>
+                {program.company.industry}
+              </TableColumn>
+              <TableColumn>
+                {arrayString(program.roles)}
+                <br />
+                <em>{`Industry: ${program.company.industry}`}</em>
+              </TableColumn>
+              <TableColumn>
+                {arrayString(program.eligible)}
+              </TableColumn>
+              <TableColumn>
+                {arrayString(program.interviews)}
+                <br />
+                {arrayString(program.challenges)}
+              </TableColumn>
+              <TableColumn>
+                {`${program.compensation} stars`}
+              </TableColumn>
+            </TableRow>
+          ))}
+        </TableBody>
+      </DataTable>
     )
   }
 }

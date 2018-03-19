@@ -14,6 +14,7 @@ Thus, when voting on A MANIFEST, you're not just voting on A PROPOSAL.
 */
 const ProgramSchema = new mongoose.Schema({
   company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', autopopulate: true },
+  name: String,
   type: { type: String, default: 'Intern' },
   eligible: { type: [String], default: ['Junior'] },
   roles: [String],
@@ -52,6 +53,7 @@ export const dummyPrograms = (min, ids) => {
         fakes[i] = new Program({
           _id: ids.program[i],
           company: ids.company[i],
+          name: faker.company.bsAdjective(),
           type: _.sample(['Intern', 'CoOp', 'New Grad']),
           eligible: [
             _.sample(['Sophomores', 'Juniors', 'Seniors', 'New Grads']),
